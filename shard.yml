@@ -1,21 +1,32 @@
-name: pub-relay
-version: 0.1.0
+name: selective-relay
+version: 0.2.0
 
 authors:
+  - noellabo <noel.yoshiba@gmail.com>
   - RX14 <chris@rx14.co.uk>
 
 dependencies:
   openssl_ext:
-    github: randomstate/openssl_ext
-    version: '>= 0.1.1'
+    github: crystal-extras/openssl_ext
+    branch: master
   redis:
     github: stefanwille/crystal-redis
-    version: '>= 2.0.0'
+    version: '>= 2.3.0'
   sidekiq:
     github: mperham/sidekiq.cr
     branch: master
   dotenv:
     github: gdotdesign/cr-dotenv
+  myhtml:
+    github: kostya/myhtml
+  clim:
+    github: at-grandpa/clim
+    version: '>= 0.8.1'
+  toml:
+    github: crystal-community/toml.cr
+    branch: master
+  citrine-i18n:
+    github: amberframework/citrine-i18n
 
 development_dependencies:
   webmock:
@@ -27,7 +38,9 @@ targets:
     main: src/server.cr
   worker:
     main: src/worker.cr
+  relayctl:
+    main: src/relayctl.cr
 
-crystal: 0.26.0
+crystal: 0.33.0
 
 license: AGPL3

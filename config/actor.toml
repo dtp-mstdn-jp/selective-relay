@@ -1,0 +1,24 @@
+# リレーの制御用アカウントの情報を記載してください。
+#
+# * リレーサーバのURLは {{root}} で置換されます。（例：https://hashtag-relay.dtp-mstdn.jp）
+# * ホスト名は {{host}} で置換されます。（例：hashtag-relay.dtp-mstdn.jp）
+
+# 表示名
+name = "Hashtag relay"
+
+# アカウントにブラウザからアクセスする際のアドレス
+url = "{{root}}/@relay"
+
+# アカウントのbioに表示される情報
+summary = '''
+<p lang="en">This is the background agent of the relay service.
+Please use the @relayctl@{{host}} account for the action to relay service.</p>
+
+<p lang="ja">リレーサービスのバックグラウンドエージェントです。
+リレーサービスへのアクションについては @relayctl@{{host}} アカウントをご利用ください。</p>'''
+
+# アバター画像
+[icon]
+type = "Image"
+mediaType = "image/png"
+url = "{{root}}/assets/images/avatar_relay.png"

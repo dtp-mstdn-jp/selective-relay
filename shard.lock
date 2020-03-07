@@ -4,17 +4,29 @@ shards:
     github: schovi/baked_file_system
     commit: e1447549d5ac0560720fae62179b2f2c62c9bfd1
 
+  citrine-i18n:
+    github: amberframework/citrine-i18n
+    version: 0.4.0
+
+  clim:
+    github: at-grandpa/clim
+    version: 0.10.0
+
   dotenv:
     github: gdotdesign/cr-dotenv
-    version: 0.1.0
+    version: 0.6.0
 
   exception_page:
     github: crystal-loot/exception_page
-    version: 0.1.1
+    version: 0.1.4
+
+  i18n:
+    github: TechMagister/i18n.cr
+    version: 0.3.1
 
   kemal:
     github: kemalcr/kemal
-    commit: 9448360eac4273919c2bb6d2517a7234844aec2f
+    commit: 4d6fb0614f29aa02254913dc6ed69b0cb148fa81
 
   kemal-csrf:
     github: kemalcr/kemal-csrf
@@ -22,15 +34,19 @@ shards:
 
   kemal-session:
     github: kemalcr/kemal-session
-    commit: bc720cca9c27e391b4b3fc32ae7cc23f4d3f3fdc
+    commit: a16f164d3dcfc6e720d566f9085285abdd5b7825
 
   kilt:
     github: jeromegn/kilt
     version: 0.4.0
 
+  myhtml:
+    github: kostya/myhtml
+    version: 1.5.1
+
   openssl_ext:
-    github: randomstate/openssl_ext
-    version: 0.1.1
+    github: crystal-extras/openssl_ext
+    commit: 47778f8ce761be1d1ad0f7b671401929d7f75d45
 
   pool:
     github: ysbaddaden/pool
@@ -38,17 +54,21 @@ shards:
 
   radix:
     github: luislavena/radix
-    version: 0.3.8
+    version: 0.3.9
 
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 2.5.3
 
   sidekiq:
     github: mperham/sidekiq.cr
-    commit: 002d984edc24d901771a60139e7da6dcfe109736
+    commit: ea41d5e24d0ce9630d3c84c708f9ab6cc13d00a7
+
+  toml:
+    github: crystal-community/toml.cr
+    commit: d02de85eed68a70dc97ab6d6e52831a4d0e890fe
 
   webmock:
     github: manastech/webmock.cr
-    version: 0.10.0
+    version: 0.12.1
 

@@ -1,0 +1,45 @@
+hello: "Hello, %{name}"
+send: send
+receive: receive
+lang: lang
+admin: admin
+disabled: disabled
+set_default: Default setting
+set_default_change: Default setting change to
+send_deny_domains: Domains deny to send
+subscribe_tags: subscribe_tags
+subscribe_accts: subscribe_accts
+server: Server
+user: User
+none: none
+set_send_enabled: Relay sending enabled
+set_send_disabled: Relay sending disabled
+send_deny_domains_mes:
+  one: "%{count} domain has been set to deny sending"
+  other: "%{count} domains has been set to deny sending"
+send_deny_domains_clear_mes: Cleared domain deny
+subscribe_tags_mes:
+  one: "%{count} subscription to the hashtag have been added."
+  other: "%{count} subscriptions to the hashtag have been added."
+subscribe_accts_mes:
+  one: "%{count} subscription to the account has been added."
+  other: "%{count} subscriptions to the account has been added."
+subscribe_nothing: "Nothing was added."
+unsubscribe_tags:
+  one: "%{count} subscription to the hashtags have been deleted."
+  other: "%{count} subscriptions to the hashtags have been deleted."
+unsubscribe_accts:
+  one: "%{count} subscription to the accounts have been deleted."
+  other: "%{count} subscriptions to the accounts have been deleted."
+unsubscribe_nothing: "Nothing was deleted."
+join_already: You are already joined to the relay.
+join_success: You joined the relay.
+leave_success: You left the relay.
+leave_already: You have not joined the relay.
+not_found_admin_acct: "Could not get administrator information for %{domain}."
+add_admin_acct: "%{acct} has been added as an administrator of %{domain}."
+exist_admin_acct: "%{acct} is already an administrator of %{domain}."
+reject_admin_acct: "%{acct} does not have permission to become an administrator of %{domain}."
+cli_desc: Selective-relay controll command line interface.
+cli_refresh_desc: Broadcast updates of actor to known servers.
+cli_publish_desc: Publish json style activity.

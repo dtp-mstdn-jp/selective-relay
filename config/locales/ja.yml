@@ -1,0 +1,45 @@
+hello: "こんにちは、%{name}さん"
+send: 送信
+receive: 受信
+lang: 言語
+admin: 管理者
+disabled: 無効
+set_default: デフォルト設定
+set_default_change: デフォルト設定を変更
+send_deny_domains: 送信しないドメイン
+subscribe_tags: 購読中のタグ
+subscribe_accts: 購読中のアカウント
+server: サーバー
+user: ユーザー
+none: なし
+set_send_enabled: リレーによる送信を有効にしました
+set_send_disabled: リレーによる送信を無効にしました
+send_deny_domains_mes:
+  one: "%{count}個のドメインが送信拒否に設定されました"
+  other: "%{count}個のドメインが送信拒否に設定されました"
+send_deny_domains_clear_mes: ドメインの送信拒否を消去しました
+subscribe_tags_mes:
+  one: "%{count}個のハッシュタグの購読が追加されました"
+  other: "%{count}個のハッシュタグの購読が追加されました"
+subscribe_accts_mes:
+  one: "%{count}個のアカウントの購読が追加されました"
+  other: "%{count}個のアカウントの購読が追加されました"
+subscribe_nothing: "なにも追加されませんでした"
+unsubscribe_tags:
+  one: "%{count}個のハッシュタグの購読が削除されました"
+  other: "%{count}個のハッシュタグの購読が削除されました"
+unsubscribe_accts:
+  one: "%{count}個のアカウントの購読が削除されました"
+  other: "%{count}個のアカウントの購読が削除されました"
+unsubscribe_nothing: "なにも削除されませんでした"
+join_already: あなたはすでにリレーに参加しています
+join_success: リレーに参加しました
+leave_success: リレーから脱退しました
+leave_already: あなたはすでにリレーから脱退しています
+not_found_admin_acct: "%{domain}の管理者情報を取得できませんでした。"
+add_admin_acct: "%{acct}を%{domain}の管理者に追加しました。"
+exist_admin_acct: "%{acct}は既に%{domain}の管理者です。"
+reject_admin_acct: "%{acct}は%{domain}の管理者になる権限がありません。"
+cli_desc: Selective-relay 制御コマンドラインインターフェース
+cli_refresh_desc: 既知のサーバにアクターのアップデートをブロードキャストする
+cli_publish_desc: json形式のアクティビティを発行する

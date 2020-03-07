@@ -1,0 +1,15 @@
+[Unit]
+Description=selective-relay-worker
+After=network.target
+
+[Service]
+Type=simple
+User=selective-relay
+WorkingDirectory=/home/selective-relay/selective-relay
+ExecStart=/home/selective-relay/selective-relay/bin/worker -e production -c 15
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

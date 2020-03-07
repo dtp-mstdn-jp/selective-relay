@@ -1,0 +1,29 @@
+# リレーの制御用アカウントの情報を記載してください。
+#
+# * リレーサーバのURLは {{root}} で置換されます。（例：https://hashtag-relay.dtp-mstdn.jp）
+# * ホスト名は {{host}} で置換されます。（例：hashtag-relay.dtp-mstdn.jp）
+
+# 表示名
+name = "Hashtag relay control service"
+
+# アカウントにブラウザからアクセスする際のアドレス
+url = "{{root}}/@relayctl"
+
+# アカウントのbioに表示される情報
+summary = '''
+<p lang="en">This is an agent for controlling relay services.
+Please send a command for control to the agent.
+You can join / leave the relay or change the setting.
+Please refer to the <a href="{{root}}/help">help</a> for usage. You can not follow directly from user account.</p>
+
+<p lang="ja">リレーサービスの制御エージェントです。
+エージェントにコントロール用のコマンドを送ってください。
+リレーに参加・離脱したり、設定を変更できます。
+使い方は<a href="{{root}}/help">ヘルプ</a>をご覧下さい。
+このアカウントは、ユーザーアカウントから直接フォローすることはできません。</p>'''
+
+# アバター画像
+[icon]
+type = "Image"
+mediaType = "image/png"
+url = "{{root}}/assets/images/avatar_relayctl.png"
