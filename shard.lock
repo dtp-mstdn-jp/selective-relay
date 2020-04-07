@@ -2,7 +2,7 @@ version: 1.0
 shards:
   baked_file_system:
     github: schovi/baked_file_system
-    commit: e1447549d5ac0560720fae62179b2f2c62c9bfd1
+    version: 0.9.8
 
   citrine-i18n:
     github: amberframework/citrine-i18n
@@ -14,7 +14,7 @@ shards:
 
   dotenv:
     github: gdotdesign/cr-dotenv
-    version: 0.6.0
+    version: 0.7.0
 
   exception_page:
     github: crystal-loot/exception_page
@@ -30,11 +30,11 @@ shards:
 
   kemal-csrf:
     github: kemalcr/kemal-csrf
-    version: 0.5.0
+    version: 0.6.0
 
   kemal-session:
     github: kemalcr/kemal-session
-    version: 0.10.0
+    version: 0.12.0
 
   kilt:
     github: jeromegn/kilt
@@ -57,12 +57,12 @@ shards:
     version: 0.3.9
 
   redis:
-    github: stefanwille/crystal-redis
-    version: 2.5.3
+    github: bcardiff/crystal-redis
+    commit: c46eb9fec07000332ff4ade598edc3fa4b06561e
 
   sidekiq:
-    github: mperham/sidekiq.cr
-    commit: ea41d5e24d0ce9630d3c84c708f9ab6cc13d00a7
+    github: noellabo/sidekiq.cr
+    commit: b350ccccbe940a6277089b69ae7aada5dbed5e5b
 
   toml:
     github: crystal-community/toml.cr

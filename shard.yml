@@ -10,10 +10,10 @@ dependencies:
     github: crystal-extras/openssl_ext
     branch: master
   redis:
-    github: stefanwille/crystal-redis
-    version: '>= 2.3.0'
+    github: bcardiff/crystal-redis
+    commit: c46eb9fec07000332ff4ade598edc3fa4b06561e
   sidekiq:
-    github: mperham/sidekiq.cr
+    github: noellabo/sidekiq.cr
     branch: master
   dotenv:
     github: gdotdesign/cr-dotenv
@@ -41,6 +41,6 @@ targets:
   relayctl:
     main: src/relayctl.cr
 
-crystal: 0.33.0
+crystal: 0.34.0
 
 license: AGPL3
