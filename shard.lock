@@ -26,7 +26,7 @@ shards:
 
   kemal:
     github: kemalcr/kemal
-    commit: 4d6fb0614f29aa02254913dc6ed69b0cb148fa81
+    commit: c3c43145b8951b511790287ef3cd872f75c55c89
 
   kemal-csrf:
     github: kemalcr/kemal-csrf
@@ -34,7 +34,7 @@ shards:
 
   kemal-session:
     github: kemalcr/kemal-session
-    commit: a16f164d3dcfc6e720d566f9085285abdd5b7825
+    version: 0.10.0
 
   kilt:
     github: jeromegn/kilt
