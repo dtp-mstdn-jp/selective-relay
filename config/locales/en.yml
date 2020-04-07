@@ -40,6 +40,9 @@ not_found_admin_acct: "Could not get administrator information for %{domain}."
 add_admin_acct: "%{acct} has been added as an administrator of %{domain}."
 exist_admin_acct: "%{acct} is already an administrator of %{domain}."
 reject_admin_acct: "%{acct} does not have permission to become an administrator of %{domain}."
+not_admin_acct: "%{acct} is not an administrator of %{domain}. You must register as an administrator using the auth command in advance."
+join_domain_success: "%{domain} joined the relay."
+leave_domain_success: "%{domain} left the relay."
 cli_desc: Selective-relay controll command line interface.
 cli_refresh_desc: Broadcast updates of actor to known servers.
 cli_publish_desc: Publish json style activity.

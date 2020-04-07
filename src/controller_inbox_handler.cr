@@ -198,13 +198,31 @@ class ControllerInboxHandler
         reply t("set_send_disabled") unless opts.has_key?("quiet") || get_user_quietmode(actor)
       end
     when "receive"
-      if opts.has_key?("deny")
-        case opts["deny"].first
-        when "actor-types"
-          if args.size > 0
-            # regist
-          else
-            # reset
+      if opts.has_key?("server") || get_user_servermode(actor)
+        domain = actor.domain
+        unless is_admin?(domain, actor.acct)
+          reply t("not_admin_acct", options: {domain: domain, acct: actor.acct}) unless opts.has_key?("quiet") || get_user_quietmode(actor)
+          return
+        end
+
+        # for Server
+        if opts.has_key?("enable")
+          PubRelay.redis.hset("subscription:#{domain}", "inbox_url", actor.inbox_url)
+          reply t("join_domain_success", options: {domain: domain}) unless opts.has_key?("quiet") || get_user_quietmode(actor)
+        elsif opts.has_key?("disable")
+          PubRelay.redis.del("subscription:#{domain}")
+          reply t("leave_domain_success", options: {domain: domain}) unless opts.has_key?("quiet") || get_user_quietmode(actor)
+        end
+      else
+        # for User
+        if opts.has_key?("deny")
+          case opts["deny"].first
+          when "actor-types"
+            if args.size > 0
+              # regist
+            else
+              # reset
+            end
           end
         end
       end

@@ -40,6 +40,9 @@ not_found_admin_acct: "%{domain}の管理者情報を取得できませんでし
 add_admin_acct: "%{acct}を%{domain}の管理者に追加しました。"
 exist_admin_acct: "%{acct}は既に%{domain}の管理者です。"
 reject_admin_acct: "%{acct}は%{domain}の管理者になる権限がありません。"
+not_admin_acct: "%{acct}は%{domain}の管理者ではありません。事前にauthコマンドで管理者登録してください。"
+join_domain_success: "%{domain}はリレーに参加しました"
+leave_domain_success: "%{domain}はリレーから脱退しました"
 cli_desc: Selective-relay 制御コマンドラインインターフェース
 cli_refresh_desc: 既知のサーバにアクターのアップデートをブロードキャストする
 cli_publish_desc: json形式のアクティビティを発行する
