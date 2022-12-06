@@ -30,14 +30,15 @@ module RelayCtl
         desc t("cli_refresh_desc")
         usage "relayctl refresh USERNAME [options]"
         option "-d DOMAIN", "--domain=DOMAIN", type: String, desc: "Target domain.", default: ""
+        argument "username", type: String, desc: "user name.", default: ""
         run do |opts, args|
-          unless args.size == 1
+          if args.username.blank?
             puts opts.help_string
-            return
+            next
           end
 
-          domain = args[0].downcase
-          RelayActor.update(domain, opts.domain)
+          username = args.username.downcase
+          RelayActor.update(username, opts.domain)
         end
       end
 
@@ -50,20 +51,21 @@ module RelayCtl
         option "-c CC_ACTOR_ID", "--cc=CC_ACTOR_ID", type: Array(String), desc: "CC target actors. (id or keyword: public, followers)", default: [] of String
         option "-v VISIBILITY", "--visibility=VISIBILITY", type: String, desc: "Visibility. (keyword: public, unlisted, private, direct, nop)", default: "public"
         option "--object=OBJECT_ID", type: String, desc: "Target object ID.", default: ""
+        argument "json", type: String, desc: "ActivityPub json", default: ""
         run do |opts, args|
-          unless args.size == 1
+          if args.json.blank?
             puts opts.help_string
-            return
+            next
           end
 
           unless Cli::VISIBILITY.includes? opts.visibility
             puts "#{opts.visibility} is invalid visibility. Please specify from the following. (public, unlisted, private, direct)"
-            return
+            next
           end
 
           to, cc = Cli.apply_visibility(opts.actor, opts.to, opts.cc, opts.visibility)
 
-          json = File.read(args[0]).gsub(/({{(?:.+?)}})/, {
+          json = File.read(args.json).gsub(/({{(?:.+?)}})/, {
             "{{root}}"   => PubRelay.route_url(""),
             "{{host}}"   => PubRelay.host,
             "{{actor}}"  => opts.actor,
@@ -85,9 +87,9 @@ module RelayCtl
         option "-a ACTOR", "--actor=ACTOR", type: String, desc: "Target actor.", default: ""
         option "-d DOMAIN", "--domain=DOMAIN", type: String, desc: "Target domain.", default: ""
         run do |opts, args|
-          unless args.size == 0 && (!opts.activity_id.empty? || !opts.actor.empty? || !opts.domain.empty?)
+          unless !opts.activity_id.empty? || !opts.actor.empty? || !opts.domain.empty?
             puts opts.help_string
-            return
+            next
           end
 
           if opts.activity_id.empty?

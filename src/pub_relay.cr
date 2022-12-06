@@ -4,6 +4,7 @@ require "openssl_ext"
 require "redis"
 require "sidekiq"
 require "i18n"
+require "log"
 
 require "./actor"
 require "./relay_activity"
@@ -11,7 +12,7 @@ require "./inbox_handler"
 require "./controller_inbox_handler"
 
 class PubRelay
-  VERSION = "0.2.0"
+  VERSION = "0.2.1"
 
   include HTTP::Handler
 
@@ -29,7 +30,7 @@ class PubRelay
 
   class_property(host) { ENV["RELAY_DOMAIN"] }
 
-  class_property logger = Logger.new(STDOUT)
+  class_property logger = Log
 
   def call(context : HTTP::Server::Context)
 

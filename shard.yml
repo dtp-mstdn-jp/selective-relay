@@ -1,5 +1,5 @@
 name: selective-relay
-version: 0.2.0
+version: 0.2.1
 
 authors:
   - noellabo <noel.yoshiba@gmail.com>
@@ -7,21 +7,22 @@ authors:
 
 dependencies:
   openssl_ext:
-    github: crystal-extras/openssl_ext
-    branch: master
+    github: spider-gazelle/openssl_ext
+    version: '~> 2.2.0'
   redis:
     github: stefanwille/crystal-redis
-    version: '>= 2.3.0'
+    version: '~> 2.8.3'
   sidekiq:
     github: mperham/sidekiq.cr
     branch: master
   dotenv:
     github: gdotdesign/cr-dotenv
+    version: '~> 1.0.0'
   myhtml:
     github: kostya/myhtml
   clim:
     github: at-grandpa/clim
-    version: '>= 0.8.1'
+    version: '>= 0.17.0'
   toml:
     github: crystal-community/toml.cr
     branch: master
@@ -41,6 +42,6 @@ targets:
   relayctl:
     main: src/relayctl.cr
 
-crystal: 0.33.0
+crystal: ">= 1.1.1, < 2.0"
 
 license: AGPL3

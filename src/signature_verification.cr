@@ -141,7 +141,7 @@ module SignatureVerification
       when "digest"
         body_digest = OpenSSL::Digest.new("SHA256")
         body_digest.update(body)
-        "digest: SHA-256=#{Base64.strict_encode(body_digest.digest)}"
+        "digest: SHA-256=#{Base64.strict_encode(body_digest.final)}"
       else
         request_header = request.headers[header_name]?
         unless request_header
@@ -153,7 +153,7 @@ module SignatureVerification
   end
 
   private def error(status_code, message)
-    PubRelay.logger.info "Returned error to client: #{message} #{status_code}"
+    PubRelay.logger.info { "Returned error to client: #{message} #{status_code}" }
 
     response.status_code = status_code
     response.puts message

@@ -10,7 +10,7 @@ end
 PubRelay.private_key = OpenSSL::RSA.new(File.read(File.join(__DIR__, "test_actor.pem")))
 PubRelay.host = "example.com"
 
-PubRelay.logger.level = Logger::WARN
+PubRelay.logger.setup(:warn)
 
 def request(method, resource, headers = nil, body = nil)
   request = HTTP::Request.new(method, resource, headers, body)

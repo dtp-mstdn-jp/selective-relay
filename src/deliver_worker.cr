@@ -12,7 +12,7 @@ class DeliverWorker
 
     body_hash = OpenSSL::Digest.new("sha256")
     body_hash.update(request_body)
-    body_hash = Base64.strict_encode(body_hash.digest)
+    body_hash = Base64.strict_encode(body_hash.final)
 
     headers = HTTP::Headers{
       "Host"   => inbox_url.host.not_nil!,
@@ -41,7 +41,7 @@ class DeliverWorker
     client.dns_timeout = 10.seconds
     client.connect_timeout = 10.seconds
     client.read_timeout = 10.seconds
-    response = client.post(inbox_url.full_path, headers: headers, body: request_body)
+    response = client.post(inbox_url.request_target, headers: headers, body: request_body)
   rescue ex
     puts "POST #{inbox_url} #{ex.message}"
   else

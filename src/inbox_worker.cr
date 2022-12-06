@@ -26,7 +26,7 @@ class InboxWorker
     headers = HTTP::Headers{"Accept" => "application/activity+json, application/ld+json"}
     response = HTTP::Client.get(url, headers: headers)
     unless response.status_code == 200
-      PubRelay.logger.info "Got non-200 response from fetching #{url.inspect}"
+      PubRelay.logger.info { "Got non-200 response from fetching #{url.inspect}" }
       raise Exception.new
     end
     response.body
