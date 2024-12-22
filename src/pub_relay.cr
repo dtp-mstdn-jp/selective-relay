@@ -12,7 +12,7 @@ require "./inbox_handler"
 require "./controller_inbox_handler"
 
 class PubRelay
-  VERSION = "0.2.1"
+  VERSION = "0.2.2"
 
   include HTTP::Handler
 
@@ -33,7 +33,6 @@ class PubRelay
   class_property logger = Log
 
   def call(context : HTTP::Server::Context)
-
     case {context.request.method, context.request.path}
     when {"GET", "/.well-known/webfinger"}
       serve_webfinger(context)
@@ -99,7 +98,7 @@ class PubRelay
   private def serve_nodeinfo_wellknown(ctx)
     ctx.response.content_type = "application/json"
     {
-      links:   {
+      links: {
         {
           rel:  "http://nodeinfo.diaspora.software/ns/schema/2.0",
           href: route_url("/nodeinfo/2.0"),
@@ -127,10 +126,10 @@ class PubRelay
           total: 2,
         },
       },
-      version: "2.0",
+      version:  "2.0",
       metadata: {
-        peers: PubRelay.redis.keys("subscription:*").map(&.as(String).lchop("subscription:"))
-      }
+        peers: PubRelay.redis.keys("subscription:*").map(&.as(String).lchop("subscription:")),
+      },
     }.to_json(ctx.response)
   end
 
@@ -158,11 +157,11 @@ class PubRelay
     else
       ctx.response.content_type = "application/json"
       {
-        "@context"     => "https://www.w3.org/ns/activitystreams",
-        "id"           => route_url("/actor/followers"),
-        "type"         => "OrderedCollection",
-        "totalItems"   => 0,
-        "first"        => route_url("/actor/followers?page=1"),
+        "@context"   => "https://www.w3.org/ns/activitystreams",
+        "id"         => route_url("/actor/followers"),
+        "type"       => "OrderedCollection",
+        "totalItems" => 0,
+        "first"      => route_url("/actor/followers?page=1"),
       }.to_json(ctx.response)
     end
   end
@@ -181,11 +180,11 @@ class PubRelay
     else
       ctx.response.content_type = "application/json"
       {
-        "@context"     => "https://www.w3.org/ns/activitystreams",
-        "id"           => route_url("/controller/followers"),
-        "type"         => "OrderedCollection",
-        "totalItems"   => 0,
-        "first"        => route_url("/controller/followers?page=1"),
+        "@context"   => "https://www.w3.org/ns/activitystreams",
+        "id"         => route_url("/controller/followers"),
+        "type"       => "OrderedCollection",
+        "totalItems" => 0,
+        "first"      => route_url("/controller/followers?page=1"),
       }.to_json(ctx.response)
     end
   end

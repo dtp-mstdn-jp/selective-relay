@@ -93,7 +93,7 @@ module SignatureVerification
     params
   end
 
-  CACHE_EXPIRE_SECOND = 2.day.to_i;
+  CACHE_EXPIRE_SECOND = 2.day.to_i
 
   private def cached_fetch_json(url, json_class : JsonType.class, use_cache = true) : JsonType forall JsonType
     remote_actor_key = "remote_actor:cache:#{url}"

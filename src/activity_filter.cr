@@ -86,5 +86,4 @@ class ActivityFilter
   private def redis
     PubRelay.redis
   end
-
 end

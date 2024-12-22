@@ -1,5 +1,5 @@
 require "uri"
-require "myhtml"
+require "lexbor"
 require "./converters"
 
 class Activity
@@ -102,7 +102,7 @@ class Activity
   end
 
   def content_text : String
-    Myhtml::Parser.new(content.to_s)
+    Lexbor::Parser.new(content.to_s)
       .nodes(:_text)
       .select(&.parents.all?(&.displayble?))
       .map(&.tag_text)
@@ -190,7 +190,7 @@ class Activity
   end
 end
 
-struct Myhtml::Node
+struct Lexbor::Node
   def displayble?
     visible? && !object? && !is_tag_noindex?
   end

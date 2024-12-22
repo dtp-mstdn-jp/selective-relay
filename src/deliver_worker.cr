@@ -15,11 +15,11 @@ class DeliverWorker
     body_hash = Base64.strict_encode(body_hash.final)
 
     headers = HTTP::Headers{
-      "Host"   => inbox_url.host.not_nil!,
-      "Date"   => HTTP.format_time(Time.utc),
-      "Digest" => "SHA-256=#{body_hash}",
+      "Host"         => inbox_url.host.not_nil!,
+      "Date"         => HTTP.format_time(Time.utc),
+      "Digest"       => "SHA-256=#{body_hash}",
       "Content-Type" => "application/ld+json;profile=\"https://www.w3.org/ns/activitystreams\"",
-      "User-Agent" => "selective-relay/0.1.0 (#{PubRelay.route_url("")})",
+      "User-Agent"   => "selective-relay/0.1.0 (#{PubRelay.route_url("")})",
     }
 
     signed_headers = "(request-target) host date digest"

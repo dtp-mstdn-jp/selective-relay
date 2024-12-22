@@ -39,7 +39,7 @@ class InboxWorker
       PubRelay.redis.hset("subscription:#{actor.domain}", "inbox_url", actor.inbox_url)
       follow(actor)
     else
-      PubRelay.redis.sadd("follower:actor", actor.id )
+      PubRelay.redis.sadd("follower:actor", actor.id)
     end
 
     accept_activity = {
@@ -63,7 +63,7 @@ class InboxWorker
     if activity.object_is_public_collection? || actor.pleroma_relay?
       PubRelay.redis.del("subscription:#{actor.domain}")
     else
-      PubRelay.redis.srem("follower:actor", actor.id )
+      PubRelay.redis.srem("follower:actor", actor.id)
     end
   end
 
@@ -164,11 +164,11 @@ class InboxWorker
     annouce_activity = {
       "@context": {"https://www.w3.org/ns/activitystreams"},
 
-      id:     PubRelay.route_url("/actor#announce/#{UUID.random}"),
-      type:   "Announce",
-      actor:  PubRelay.route_url("/actor"),
-      object: activity.object_id_string,
-      to:     ["https://www.w3.org/ns/activitystreams#Public"] + to,
+      id:        PubRelay.route_url("/actor#announce/#{UUID.random}"),
+      type:      "Announce",
+      actor:     PubRelay.route_url("/actor"),
+      object:    activity.object_id_string,
+      to:        ["https://www.w3.org/ns/activitystreams#Public"] + to,
       published: Time.utc,
     }
   end

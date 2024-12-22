@@ -1,8 +1,12 @@
 version: 2.0
 shards:
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.2
+
   baked_file_system:
     git: https://github.com/schovi/baked_file_system.git
-    version: 0.9.8+git.commit.7183bfde8d86a976a6912f582b51cbd1783456af
+    version: 0.10.0
 
   citrine-i18n:
     git: https://github.com/amberframework/citrine-i18n.git
@@ -18,7 +22,7 @@ shards:
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.1.5
+    version: 0.4.1
 
   i18n:
     git: https://github.com/techmagister/i18n.cr.git
@@ -26,27 +30,23 @@ shards:
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
-    version: 1.0.0
+    version: 1.6.0
 
   kemal-csrf:
     git: https://github.com/kemalcr/kemal-csrf.git
-    version: 0.8.0+git.commit.abaee30f1e8e28d896ed6bf5267a530b5d6ca638
+    version: 1.1.0
 
   kemal-session:
     git: https://github.com/kemalcr/kemal-session.git
     version: 1.0.0
 
-  kilt:
-    git: https://github.com/jeromegn/kilt.git
-    version: 0.4.1
-
-  myhtml:
-    git: https://github.com/kostya/myhtml.git
-    version: 1.5.8
+  lexbor:
+    git: https://github.com/kostya/lexbor.git
+    version: 3.2.0
 
   openssl_ext:
     git: https://github.com/spider-gazelle/openssl_ext.git
-    version: 2.2.0
+    version: 2.4.4
 
   pool:
     git: https://github.com/ysbaddaden/pool.git
@@ -58,15 +58,15 @@ shards:
 
   redis:
     git: https://github.com/stefanwille/crystal-redis.git
-    version: 2.8.3
+    version: 2.9.1
 
   sidekiq:
-    git: https://github.com/mperham/sidekiq.cr.git
-    version: 0.7.0+git.commit.23de369b989dc854dcc5311aa2238005b4be1219
+    git: https://github.com/hugopl/sidekiq.cr.git
+    version: 0.7.3
 
   toml:
     git: https://github.com/crystal-community/toml.cr.git
-    version: 0.7.0+git.commit.4b6325e2a378bac4abc98ee4d5734d57a6a55554
+    version: 0.7.0
 
   webmock:
     git: https://github.com/manastech/webmock.cr.git
