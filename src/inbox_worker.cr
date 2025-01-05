@@ -17,6 +17,7 @@ class InboxWorker
     when .valid_for_rebroadcast?
       handle_update(actor_from_signature, activity, key_id) if activity.update?
       handle_forward(actor_from_signature, activity, request_body)
+      handle_subscribe(actor_from_signature, activity, request_body)
     end
   rescue ex
     puts "exception(inbox) #{ex.message}"
@@ -69,65 +70,68 @@ class InboxWorker
 
   private def handle_update(actor, activity, key_id)
     if activity.object_types.any? { |type| Actor::SUPPORTED_TYPES.includes? type } && activity.object_id_string == actor.id
-      remote_actor_key = "remote_actor:cache:#{key_id}"
-      if PubRelay.redis.exists(remote_actor_key) == 1
-        PubRelay.redis.del(remote_actor_key)
+      remote_actor_key = "remote_actor:#{key_id}"
+      if PubRelay.cache_redis.exists(remote_actor_key) == 1
+        PubRelay.cache_redis.del(remote_actor_key)
         puts "delete cache: #{remote_actor_key}"
       end
 
-      remote_actor_key = "remote_actor:cache:#{actor.public_key.owner}"
-      if PubRelay.redis.exists(remote_actor_key) == 1
-        PubRelay.redis.del(remote_actor_key)
+      remote_actor_key = "remote_actor:#{actor.public_key.owner}"
+      if PubRelay.cache_redis.exists(remote_actor_key) == 1
+        PubRelay.cache_redis.del(remote_actor_key)
         puts "delete cache: #{remote_actor_key}"
       end
     end
   end
 
   private def handle_forward(actor, activity, request_body)
-    # TODO: cache the subscriptions
     filter = ActivityFilter.new(actor, activity)
 
     subscription_domains = PubRelay.redis.keys("subscription:*").compact_map(&.as(String).lchop("subscription:"))
     bulk_args = subscription_domains.compact_map do |domain|
-      filter.domain = domain
+      next if filter.reject_delivery?(domain)
 
-      if domain == actor.domain || filter.reject_delivery?
-        nil
+      if !activity.signature_present? && activity.note?
+        {domain, announce(activity).to_json, PubRelay.route_url("/actor")}
       else
-        if !activity.signature_present? && activity.note?
-          {domain, announce(activity).to_json, PubRelay.route_url("/actor")}
-        else
-          {domain, request_body, PubRelay.route_url("/actor")}
-        end
+        {domain, request_body, PubRelay.route_url("/actor")}
       end
     end
 
     DeliverWorker.async.perform_bulk(bulk_args)
+  end
+
+  private def handle_subscribe(actor, activity, request_body)
+    filter = ActivityFilter.new(actor, activity)
+
+    subscription_domains = PubRelay.redis.keys("subscription:*").compact_map(&.as(String).lchop("subscription:"))
 
     domains = [] of String
-    if (tags = activity.hashtag_names)
-      tags.each do |tag|
-        domains += PubRelay.redis.keys("subscribe:#{tag}:*").compact_map do |key|
-          prefix, _tag, domain = key.as(String).split(':', 3)
+
+    domains.tap do |domains|
+      activity.hashtag_names.each do |tag|
+        domains.concat(
+          PubRelay.redis.keys("subscribe:#{tag}:*").compact_map do |key|
+            prefix, _tag, domain = key.as(String).split(':', 3)
+            domain
+          end
+        )
+      end
+      domains.concat(
+        PubRelay.redis.keys("subscribe:#{actor.acct}:*").compact_map do |key|
+          prefix, _acct, domain = key.as(String).split(':', 3)
           domain
         end
-      end
-    end
-    domains += PubRelay.redis.keys("subscribe:#{actor.acct}:*").compact_map do |key|
-      prefix, _acct, domain = key.as(String).split(':', 3)
-      domain
+      )
     end
 
     bulk_args = [] of Tuple(String, String, String)
     domains.uniq.each do |domain|
-      filter.domain = domain
-      next if filter.reject_subscribe_delivery?
+      next if filter.reject_subscribe_delivery?(domain)
 
       target_actors = [] of String
-      if tags
-        tags.each do |tag|
-          target_actors += PubRelay.redis.sinter("subscribe:#{tag}:#{domain}", "follower:actor")
-        end
+      activity.hashtag_names.each do |tag|
+        target_actors += PubRelay.redis.sinter("subscribe:#{tag}:#{domain}", "follower:actor")
       end
       target_actors += PubRelay.redis.sinter("subscribe:#{actor.acct}:#{domain}", "follower:actor")
       target_actors.reject(&.==(actor.id)).uniq
@@ -136,7 +140,7 @@ class InboxWorker
         while target_actors.size > 0
           bulk_args << {domain, announce(activity, target_actors.shift(20)).to_json, PubRelay.route_url("/actor")}
         end
-      elsif !(domain == actor.domain || subscription_domains.includes?(domain) || filter.reject_delivery?)
+      elsif !(domain == actor.domain || subscription_domains.includes?(domain) || filter.reject_delivery?(domain))
         bulk_args << {domain, request_body, PubRelay.route_url("/actor")}
       end
     end

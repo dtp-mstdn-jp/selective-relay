@@ -1,5 +1,5 @@
 name: selective-relay
-version: 0.2.2
+version: 0.2.3
 
 authors:
   - noellabo <noel.yoshiba@gmail.com>
@@ -25,9 +25,11 @@ dependencies:
     version: '>= 0.17.1'
   toml:
     github: crystal-community/toml.cr
-    version: 0.7.0+git.commit.4b6325e2a378bac4abc98ee4d5734d57a6a55554
+    branch: master
   citrine-i18n:
     github: amberframework/citrine-i18n
+  truthy:
+    github: sam0x17/truthy
 
 development_dependencies:
   webmock:

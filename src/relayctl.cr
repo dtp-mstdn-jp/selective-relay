@@ -14,7 +14,7 @@ include I18nHelper
 
 module RelayCtl
   class Cli < Clim
-    VERSION = "0.2.2"
+    VERSION = "0.2.3"
 
     main do
       desc t("cli_desc")

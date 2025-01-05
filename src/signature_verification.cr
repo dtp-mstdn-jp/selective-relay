@@ -96,11 +96,11 @@ module SignatureVerification
   CACHE_EXPIRE_SECOND = 2.day.to_i
 
   private def cached_fetch_json(url, json_class : JsonType.class, use_cache = true) : JsonType forall JsonType
-    remote_actor_key = "remote_actor:cache:#{url}"
-    remote_actor_body = use_cache ? PubRelay.redis.get(remote_actor_key) : nil
+    remote_actor_key = "remote_actor:#{url}"
+    remote_actor_body = use_cache ? PubRelay.cache_redis.get(remote_actor_key) : nil
     if remote_actor_body
       puts "use cache: #{remote_actor_key}"
-      PubRelay.redis.expire(remote_actor_key, SignatureVerification::CACHE_EXPIRE_SECOND)
+      PubRelay.cache_redis.expire(remote_actor_key, SignatureVerification::CACHE_EXPIRE_SECOND)
     else
       puts "no cache: #{remote_actor_key}"
       headers = HTTP::Headers{"Accept" => "application/activity+json, application/ld+json"}
@@ -110,7 +110,7 @@ module SignatureVerification
         error(400, "Got non-200 response from fetching #{url.inspect}")
       end
       remote_actor_body = response.body
-      PubRelay.redis.setex(remote_actor_key, SignatureVerification::CACHE_EXPIRE_SECOND, remote_actor_body)
+      PubRelay.cache_redis.setex(remote_actor_key, SignatureVerification::CACHE_EXPIRE_SECOND, remote_actor_body)
     end
     JsonType.from_json(remote_actor_body)
   end

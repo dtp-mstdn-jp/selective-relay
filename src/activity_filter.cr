@@ -1,21 +1,24 @@
 require "./inbox_handler"
 
 class ActivityFilter
-  property domain : String = ""
+  private property domain : String = ""
+  private property attachments : Array(Activity::Attachment)
+  private property hashtag_names : Array(String)
 
   def initialize(@actor : Actor, @activity : Activity)
-    @attachments = activity.attachments || [] of Activity::Attachment
-    @hashtag_names = activity.hashtag_names || [] of String
+    @attachments = activity.attachments
+    @hashtag_names = activity.hashtag_names
   end
 
-  def reject_delivery?
+  def reject_delivery?(@domain : String)
     return true if same_domain? || reject_service? || no_allow_domain? || deny_domain? || deny_old_published?
-    return true if reject_subscribe_delivery?
+    return true if reject_subscribe_delivery?(@domain)
     return true if with_content? && (reject_have_attachment? || reject_not_have_hashtag? || no_allow_hashtag? || deny_hashtag?)
     false
   end
 
-  def reject_subscribe_delivery?
+  def reject_subscribe_delivery?(@domain : String)
+    return true if same_domain?
     return true if send_deny_domain?
     return true if user_send_deny_domain? || user_send_disabled?
     false

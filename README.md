@@ -3,8 +3,6 @@ selective-relay (fork from pub-relay)
 
 ...is a service-type ActivityPub actor that will re-broadcast anything sent to it to anyone who subscribes to it.
 
-![](https://i.imgur.com/5q8db54.jpg)
-
 Endpoints:
 
 - `GET /actor`

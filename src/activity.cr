@@ -24,24 +24,19 @@ class Activity
   getter cc = [] of String
 
   def follow?
-    types.includes? "Follow"
+    types.includes?("Follow")
   end
 
   def unfollow?
-    if obj = object.as? Object
-      types.includes?("Undo") && obj.types.includes?("Follow")
-    else
-      false
-    end
+    types.includes?("Undo") && object.as?(Object).try &.types.includes?("Follow")
   end
 
   def note?
-    if obj = object.as? Object
-      types.includes?("Create") && obj.types.includes?("Note")
-    elsif obj = object.as? String
+    case object
+    in String
       types.includes?("Announce")
-    else
-      false
+    in Object
+      types.includes?("Create") && object.as?(Object).try &.types.includes?("Note")
     end
   end
 
@@ -96,9 +91,7 @@ class Activity
   end
 
   def content : String?
-    if (obj = object).is_a? Object && (content = obj.content)
-      content
-    end
+    object.as?(Object).try &.content
   end
 
   def content_text : String
@@ -110,17 +103,15 @@ class Activity
   end
 
   def attachments
-    if (obj = object).is_a? Object && (attachments = obj.attachments).is_a? Array(Attachment)
-      attachments
-    end
+    object.as?(Object).try &.attachments.as?(Array(Attachment)) || [] of Attachment
   end
 
-  def hashtag_names
-    if (obj = object).is_a? Object && (tags = obj.tags).is_a? Array(Tag)
-      tags.compact_map do |tag|
-        tag.name.to_s.downcase if tag.type == "Hashtag"
-      end.uniq
-    end
+  @_hashtag_names : Array(String)?
+
+  def hashtag_names : Array(String)
+    @_hashtag_names ||= ((object.as?(Object).try &.tags.as?(Array(Tag))) || [] of Tag).compact_map do |tag|
+      tag.name.to_s.downcase if tag.type == "Hashtag"
+    end.uniq
   end
 
   def subscribed?
@@ -138,15 +129,8 @@ class Activity
     subscribed? && !actor_blocked? && addressed_to_public? && types.any? { |type| VALID_TYPES.includes? type }
   end
 
-  # def valid_for_rebroadcast?
-  #   puts "reject rebroadcast" unless (result = previous_def)
-  #   result
-  # end
-
   def lang : String?
-    if (obj = object).is_a? Object && (c = obj.content_maps)
-      c.first_key?
-    end
+    object.as?(Object).try &.content_maps.try &.first_key?
   end
 
   class Object

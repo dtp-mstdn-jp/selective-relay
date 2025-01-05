@@ -12,16 +12,18 @@ require "./inbox_handler"
 require "./controller_inbox_handler"
 
 class PubRelay
-  VERSION = "0.2.2"
+  VERSION = "0.2.3"
 
   include HTTP::Handler
 
   # Make sidekiq use REDIS_URL
   ENV["REDIS_URL"] ||= "redis://localhost:6379"
-  ENV["REDIS_PROVIDER"] = "REDIS_URL"
+  ENV["SIDEKIQ_REDIS_URL"] ||= ENV["REDIS_URL"]
+  ENV["REDIS_PROVIDER"] = "SIDEKIQ_REDIS_URL"
   Sidekiq::Client.default_context = Sidekiq::Client::Context.new
 
   class_getter redis = Redis::PooledClient.new(url: ENV["REDIS_URL"])
+  class_getter cache_redis = Redis::PooledClient.new(url: ENV["CACHE_REDIS_URL"] || ENV["REDIS_URL"])
 
   class_property(private_key) do
     private_key_path = ENV["RELAY_PKEY_PATH"]? || File.join(Dir.current, "actor.pem")

@@ -1,8 +1,6 @@
 module PresenceConverter
   def self.from_json(pull) : Bool
-    present = pull.kind != JSON::PullParser::Kind::Null
-    pull.skip
-    present
+    (pull.kind != JSON::PullParser::Kind::Null).tap { pull.skip }
   end
 
   def self.to_json(value, json : JSON::Builder)
@@ -45,5 +43,12 @@ module HashConverter
 
   def self.to_json(value, json : JSON::Builder)
     json.field value.key, value.value
+  end
+end
+
+# Work around fix
+struct TOML::Any
+  def to_json(json : JSON::Builder)
+    raw.to_json(json)
   end
 end
