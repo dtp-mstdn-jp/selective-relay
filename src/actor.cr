@@ -87,10 +87,7 @@ class RelayActor
       return
     end
 
-    domains = (PubRelay.redis.keys("subscription:*") + PubRelay.redis.keys("connection:*")).compact_map do |key|
-      prefix, domain = key.as(String).split(':', 2)
-      domain
-    end
+    domains = (PubRelay.cache_redis.smembers("subscription") + PubRelay.cache_redis.smembers("connection")).map(&.as(String))
 
     if !target.empty? && domains.includes? target
       domains = [target]

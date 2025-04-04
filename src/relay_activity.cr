@@ -29,17 +29,11 @@ class RelayActivity
   end
 
   def self.connection_domains
-    (PubRelay.redis.keys("subscription:*") + PubRelay.redis.keys("connection:*")).compact_map do |key|
-      prefix, domain = key.as(String).split(':', 2)
-      domain
-    end
+    (PubRelay.cache_redis.smembers("subscription") + PubRelay.cache_redis.smembers("connection")).map(&.as(String)).uniq
   end
 
   def self.subscription_domains
-    PubRelay.redis.keys("subscription:*").compact_map do |key|
-      prefix, domain = key.as(String).split(':', 2)
-      domain
-    end
+    PubRelay.cache_redis.smembers("subscription").map(&.as(String))
   end
 
   def self.publish(domains : Array(String), activity_json : String, actor_id : String)

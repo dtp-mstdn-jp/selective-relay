@@ -36,8 +36,10 @@ class InboxWorker
   private def handle_follow(actor, activity)
     if activity.object_is_public_collection?
       PubRelay.redis.hset("subscription:#{actor.domain}", "inbox_url", actor.inbox_url)
+      PubRelay.cache_redis.sadd("subscription", actor.domain)
     elsif actor.pleroma_relay?
       PubRelay.redis.hset("subscription:#{actor.domain}", "inbox_url", actor.inbox_url)
+      PubRelay.cache_redis.sadd("subscription", actor.domain)
       follow(actor)
     else
       PubRelay.redis.sadd("follower:actor", actor.id)
@@ -63,6 +65,7 @@ class InboxWorker
   private def handle_unfollow(actor, activity)
     if activity.object_is_public_collection? || actor.pleroma_relay?
       PubRelay.redis.del("subscription:#{actor.domain}")
+      PubRelay.cache_redis.srem("subscription", actor.domain)
     else
       PubRelay.redis.srem("follower:actor", actor.id)
     end
@@ -87,7 +90,7 @@ class InboxWorker
   private def handle_forward(actor, activity, request_body)
     filter = ActivityFilter.new(actor, activity)
 
-    subscription_domains = PubRelay.redis.keys("subscription:*").compact_map(&.as(String).lchop("subscription:"))
+    subscription_domains = PubRelay.cache_redis.smembers("subscription").map(&.as(String))
     bulk_args = subscription_domains.compact_map do |domain|
       next if filter.reject_delivery?(domain)
 
@@ -104,25 +107,15 @@ class InboxWorker
   private def handle_subscribe(actor, activity, request_body)
     filter = ActivityFilter.new(actor, activity)
 
-    subscription_domains = PubRelay.redis.keys("subscription:*").compact_map(&.as(String).lchop("subscription:"))
+    subscription_domains = PubRelay.cache_redis.smembers("subscription").map(&.as(String))
 
     domains = [] of String
 
     domains.tap do |domains|
       activity.hashtag_names.each do |tag|
-        domains.concat(
-          PubRelay.redis.keys("subscribe:#{tag}:*").compact_map do |key|
-            prefix, _tag, domain = key.as(String).split(':', 3)
-            domain
-          end
-        )
+        domains.concat(PubRelay.cache_redis.smembers("subscribe:#{tag}").map(&.as(String)))
       end
-      domains.concat(
-        PubRelay.redis.keys("subscribe:#{actor.acct}:*").compact_map do |key|
-          prefix, _acct, domain = key.as(String).split(':', 3)
-          domain
-        end
-      )
+      domains.concat(PubRelay.cache_redis.smembers("subscribe:#{actor.acct}").map(&.as(String)))
     end
 
     bulk_args = [] of Tuple(String, String, String)
@@ -151,6 +144,7 @@ class InboxWorker
   private def follow(actor)
     follow_id = PubRelay.route_url("/#{UUID.random}")
     PubRelay.redis.hset("connection:#{actor.domain}", actor.id, follow_id)
+    PubRelay.cache_redis.sadd("connection", actor.domain)
 
     follow_activity = {
       "@context": {"https://www.w3.org/ns/activitystreams"},

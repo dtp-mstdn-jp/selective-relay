@@ -34,6 +34,23 @@ class PubRelay
 
   class_property logger = Log
 
+  def self.cache_initialize
+    @@cache_redis.multi do |multi|
+      multi.del("subscription")
+      multi.sadd("subscription", @@redis.keys("subscription:*").compact_map { |key| key.as(String).split(':', 2)[1]? })
+    end
+    @@cache_redis.multi do |multi|
+      multi.del("connection")
+      multi.sadd("connection", @@redis.keys("connection:*").compact_map { |key| key.as(String).split(':', 2)[1]? })
+    end
+    @@redis.keys("subscribe:*").compact_map { |key| key.as(String).split(':', 3)[1]? }.each do |tag_or_acct|
+      @@cache_redis.multi do |multi|
+        multi.del("subscribe:#{tag_or_acct}")
+        multi.sadd("subscribe:#{tag_or_acct}", @@redis.keys("subscribe:#{tag_or_acct}:*").compact_map { |key| key.as(String).split(':', 3)[2]? })
+      end
+    end
+  end
+
   def call(context : HTTP::Server::Context)
     case {context.request.method, context.request.path}
     when {"GET", "/.well-known/webfinger"}
@@ -130,7 +147,7 @@ class PubRelay
       },
       version:  "2.0",
       metadata: {
-        peers: PubRelay.redis.keys("subscription:*").map(&.as(String).lchop("subscription:")),
+        peers: PubRelay.cache_redis.smembers("subscription"),
       },
     }.to_json(ctx.response)
   end
@@ -213,9 +230,7 @@ class PubRelay
 
   private def instance_list(ctx)
     instances = [] of String
-    @@redis.keys("subscription:*").each do |key|
-      key = key.as(String)
-      domain = key.lchop("subscription:")
+    @@cache_redis.smembers("subscription").each do |domain|
       instances.push("https://#{domain}")
     end
 

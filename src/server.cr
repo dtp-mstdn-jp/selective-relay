@@ -13,6 +13,8 @@ handlers << HTTP::LogHandler.new if ENV["RELAY_DEBUG"]?
 handlers << Citrine::I18n::Handler.new
 handlers << PubRelay.new
 
+PubRelay.cache_initialize
+
 server = HTTP::Server.new(handlers)
 bind_ip = server.bind_tcp(
   host: ENV["RELAY_HOST"]? || "localhost",

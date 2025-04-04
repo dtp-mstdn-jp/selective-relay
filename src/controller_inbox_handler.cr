@@ -375,6 +375,7 @@ class ControllerInboxHandler
     tags.each do |tag|
       tag = tag.to_s.downcase
       if redis.sadd("subscribe:#{tag}:#{actor.domain}", actor.id) > 0
+        cache_redis.sadd("subscribe:#{tag}", actor.domain)
         redis.sadd("user_options:subscribe_tag:#{actor.acct}", tag)
         added_tags << tag
         count += 1
@@ -389,6 +390,7 @@ class ControllerInboxHandler
     tags.each do |tag|
       tag = tag.to_s.downcase
       if redis.srem("subscribe:#{tag}:#{actor.domain}", actor.id) > 0
+        cache_redis.srem("subscribe:#{tag}", actor.domain) if redis.scard("subscribe:#{tag}:#{actor.domain}") == 0
         redis.srem("user_options:subscribe_tag:#{actor.acct}", tag)
         deleted_tags << tag
         count += 1
@@ -403,6 +405,7 @@ class ControllerInboxHandler
     tags.each do |tag|
       tag = tag.to_s.downcase
       redis.srem("subscribe:#{tag}:#{actor.domain}", actor.id)
+      cache_redis.srem("subscribe:#{tag}", actor.domain) if redis.scard("subscribe:#{tag}:#{actor.domain}") == 0
     end
     tags.size
   end
@@ -413,6 +416,7 @@ class ControllerInboxHandler
     accts.each do |acct|
       acct = "@#{acct}"
       if redis.sadd("subscribe:#{acct}:#{actor.domain}", actor.id) > 0
+        cache_redis.sadd("subscribe:#{acct}", actor.domain)
         redis.sadd("user_options:subscribe_acct:#{actor.acct}", acct)
         added_accts << acct
         count += 1
@@ -427,6 +431,7 @@ class ControllerInboxHandler
     accts.each do |acct|
       acct = "@#{acct}"
       if redis.srem("subscribe:#{acct}:#{actor.domain}", actor.id) > 0
+        cache_redis.srem("subscribe:#{acct}", actor.domain) if redis.scard("subscribe:#{acct}:#{actor.domain}") == 0
         redis.srem("user_options:subscribe_acct:#{actor.acct}", acct)
         deleted_accts << acct
         count += 1
@@ -439,7 +444,8 @@ class ControllerInboxHandler
     accts = redis.smembers("user_options:subscribe_acct:#{actor.acct}")
     redis.del("user_options:subscribe_acct:#{actor.acct}")
     accts.each do |acct|
-      redis.srem("subscribe:#{acct}:#{actor.domain}", actor.id)
+      redis.srem("subscribe:#{acct}:#{actor.domain}", actor.id) == 0
+      cache_redis.srem("subscribe:#{acct}", actor.domain) if redis.scard("subscribe:#{acct}:#{actor.domain}") == 0
     end
     accts.size
   end
@@ -510,6 +516,7 @@ class ControllerInboxHandler
   def follow(actor)
     follow_id = PubRelay.route_url("/#{UUID.random}")
     redis.hset("connection:#{actor.domain}", actor.id, follow_id)
+    cache_redis.sadd("connection", actor.domain)
 
     follow_activity = {
       "@context": {"https://www.w3.org/ns/activitystreams"},
@@ -526,6 +533,7 @@ class ControllerInboxHandler
   def unfollow(actor)
     follow_id = redis.hget("connection:#{actor.domain}", actor.id)
     redis.hdel("connection:#{actor.domain}", actor.id)
+    cache_redis.srem("connection", actor.domain)
 
     unfollow_activity = {
       "@context": {"https://www.w3.org/ns/activitystreams"},
@@ -616,6 +624,10 @@ class ControllerInboxHandler
 
   private def redis
     PubRelay.redis
+  end
+
+  private def cache_redis
+    PubRelay.cache_redis
   end
 end
 
