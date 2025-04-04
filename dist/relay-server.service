@@ -1,15 +1,12 @@
 [Unit]
 Description=selective-relay-server
 After=network.target
+Wants=relay-server@1.service
 
 [Service]
-Type=simple
-User=selective-relay
-WorkingDirectory=/home/selective-relay/selective-relay
-ExecStart=/home/selective-relay/selective-relay/bin/server
-ExecReload=/bin/kill -SIGUSR1 $MAINPID
-TimeoutSec=15
-Restart=always
+Type=oneshot
+ExecStart=/bin/echo "relay-server.service exists to start and stop templated relay-server@ instances together"
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

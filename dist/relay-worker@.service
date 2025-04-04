@@ -1,0 +1,17 @@
+[Unit]
+Description=selective-relay-worker (%I)
+After=network.target
+PartOf=relay-worker.service
+ReloadPropagatedFrom=relay-worker.service
+
+[Service]
+Type=simple
+User=selective-relay
+WorkingDirectory=/var/lib/selective-relay
+ExecStart=/var/lib/selective-relay/bin/worker -e production -c 15
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
