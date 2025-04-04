@@ -19,7 +19,7 @@ dependencies:
     version: '~> 1.0.0'
   lexbor:
     github: kostya/lexbor
-    version: '~> 3.2.0'
+    version: '~> 3.3.2'
   clim:
     github: at-grandpa/clim
     version: '>= 0.17.1'
