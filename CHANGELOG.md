@@ -1,8 +1,19 @@
 # Changelog
 
-## [Unreleased]
+## [0.2.3] - 2025-04-05
 
+### Added
 
+- Added a systemd unit file to start multiple server processes and multiple worker processes.
+
+### Changed
+
+- Changed to use up to three Redis servers (REDIS_URL, CACHE_REDIS_URL, SIDEKIQ_REDIS_URL)
+- The subscription list, which was obtained by Redis key scanning, has been changed to be obtained from the cache Redis set type, improving performance.
+
+### Fixed
+
+- Updated shards
 
 ## [0.2.2] - 2024-12-23
 
